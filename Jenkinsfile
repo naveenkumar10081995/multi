@@ -7,7 +7,7 @@ pipeline
         {
             steps
             {
-                git 'https://github.com/intelliqittrainings/maven.git'
+                git 'https://github.com/naveenkumar10081995/maven.git'
             }
         }
         stage('ContinuousBuild')
@@ -18,18 +18,18 @@ pipeline
             }
         }
         stage('ContinuousDeployment')
-        {
+         {
             steps
             {
-               deploy adapters: [tomcat9(credentialsId: 'bfb67f1d-2f4e-430c-bb8d-30584116bd00', path: '', url: 'http://172.31.51.212:9090')], contextPath: 'test1', war: '**/*.war'
+              deploy adapters: [tomcat9(credentialsId: '5b2397b3-b95a-4a34-93c4-6092e7f0ef89', path: '', url: 'http://172.31.22.65:8080')], contextPath: 'test', war: '**/*.war'     
             }
-        }
+	}
         stage('ContinuousTesting')
         {
             steps
-            {
-               git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
-               sh 'java -jar /home/ubuntu/.jenkins/workspace/DeclarativePipeline1/testing.jar'
+            {  
+               git 'https://github.com/naveenkumar10081995/functional-testing.git'
+	          sh 'java -jar /home/ubuntu/.jenkins/workspace/items/testing.jar'
             }
         }
        
@@ -40,8 +40,8 @@ pipeline
         success
         {
             input message: 'Need approval from the DM!', submitter: 'srinivas'
-               deploy adapters: [tomcat9(credentialsId: 'bfb67f1d-2f4e-430c-bb8d-30584116bd00', path: '', url: 'http://172.31.50.204:9090')], contextPath: 'prod1', war: '**/*.war'
-        }
+            deploy adapters: [tomcat9(credentialsId: 'ff0308f1-d148-44c6-9b2c-cab29c4c2fc8', path: '', url: 'http://172.31.16.239:8080')], contextPath: 'qa', war: '**/*.war'
+	   }
         failure
         {
             mail bcc: '', body: 'Continuous Integration has failed', cc: '', from: '', replyTo: '', subject: 'CI Failed', to: 'selenium.saikrishna@gmail.com'
