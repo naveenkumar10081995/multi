@@ -1,0 +1,45 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('continuous dopwnload')
+        {
+            steps
+            {
+                git 'https://github.com/naveenkumar10081995/maven.git'
+            }
+        }
+        stage('continuous build')
+        {
+            steps
+            {
+                sh 'mvn package'
+            }
+        }
+        stage('continuous deployment')
+        {
+            steps
+            {
+              deploy adapters: [tomcat9(credentialsId: '5b2397b3-b95a-4a34-93c4-6092e7f0ef89', path: '', url: 'http://172.31.22.65:8080')], contextPath: 'qa', war: '**/*.war'
+                
+            }
+        }
+        stage('continuous testing')
+        {
+            steps
+            {
+                git 'https://github.com/naveenkumar10081995/functional-testing.git'
+                sh 'java -jar /home/ubuntu/.jenkins/workspace/items/testing.jar'
+            }
+        }
+        stage('continuous delivery')
+        {
+            steps
+            {
+                deploy adapters: [tomcat9(credentialsId: 'ff0308f1-d148-44c6-9b2c-cab29c4c2fc8', path: '', url: 'http://172.31.16.239:8080')], contextPath: 'prod', war: '**/*.war'
+            }
+        }
+    }
+    
+}
